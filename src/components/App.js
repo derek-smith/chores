@@ -1,14 +1,16 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import logo from '../logo.svg';
 import './App.css';
 
-function App() {
+const App = ({isSignedIn}) => {
+  console.log('<App> isSignedIn:', isSignedIn);
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          isSignedIn: {`${isSignedIn}`}
         </p>
         <a
           className="App-link"
@@ -23,4 +25,8 @@ function App() {
   );
 }
 
-export default App;
+const mapStateToProps = ({isSignedIn}) => ({
+  isSignedIn,
+});
+
+export default connect(mapStateToProps)(App);
