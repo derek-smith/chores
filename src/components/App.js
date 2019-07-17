@@ -3,30 +3,28 @@ import {connect} from 'react-redux';
 import logo from '../logo.svg';
 import './App.css';
 
-const App = ({isSignedIn}) => {
-  console.log('<App> isSignedIn:', isSignedIn);
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          isSignedIn: {`${isSignedIn}`}
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import {signIn} from '../state/actions';
 
-const mapStateToProps = ({isSignedIn}) => ({
+const App = ({isSignedIn, name, signIn}) => (
+  <div className="App">
+    <header className="App-header">
+      <img src={logo} className="App-logo" alt="logo" />
+      <p>
+        {isSignedIn ? (
+          `Hi ${name}`
+        ) : (
+          <button onClick={signIn}>Sign in to Google</button>
+        )}
+      </p>
+    </header>
+  </div>
+);
+
+const mapStateToProps = ({isSignedIn, name}) => ({
   isSignedIn,
+  name,
 });
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = {signIn};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

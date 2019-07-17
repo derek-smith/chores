@@ -4,7 +4,8 @@ import {Provider} from 'react-redux'
 import './index.css';
 import App from './components/App';
 import store from './state/store';
-import {setup as setupSheetsApi} from './api/sheets';
+import {initSheetsApi} from './state/actions';
+// import {setup as setupSheetsApi} from './api/sheets';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
@@ -14,7 +15,9 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-setupSheetsApi(store);
+store.dispatch(initSheetsApi());
+
+// setupSheetsApi(store);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
