@@ -1,4 +1,6 @@
-import creditials from './.credentials.json';
+// import creditials from './.credentials.json';
+
+const creditials = {web: {}};
 
 export const init = async () => {
   return new Promise(resolve => {
@@ -9,26 +11,35 @@ export const init = async () => {
         discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
         scope: 'https://www.googleapis.com/auth/spreadsheets',
       });
-      console.log('init() gapi.auth2:', window.gapi.auth2);
       
-      const isSignedIn = window.gapi.auth2.getAuthInstance().isSignedIn.get();
-      console.log('init() isSignedIn:', isSignedIn);
+      const auth = window.gapi.auth2.getAuthInstance();
+
+      if (!auth) {
+        resolve({isSignedIn: false});
+        return;
+      }
+
+      const isSignedIn = auth.isSignedIn.get();
 
       if (!isSignedIn) {
         resolve({isSignedIn});
         return;
       }
 
-      const name = window.gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getGivenName();
-      console.log('init() name:', name);
+      const name = auth.currentUser.get().getBasicProfile().getGivenName();
 
-      // TODO: Return other data like name
       resolve({isSignedIn, name});
     });
   });
 };
 
 export const googleSignIn = async () => {
+  const auth = window.gapi.auth2.getAuthInstance();
+
+  if (!auth) {
+    return {isSignedIn: false};
+  }
+
   let isSignedIn = window.gapi.auth2.getAuthInstance().isSignedIn.get();
 
   if (!isSignedIn) {
@@ -42,7 +53,6 @@ export const googleSignIn = async () => {
 
   const name = window.gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getGivenName();
 
-  // TODO: Return other data like name
   return {isSignedIn, name};
 }
 
