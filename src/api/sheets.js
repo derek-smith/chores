@@ -1,13 +1,11 @@
-// import creditials from './.credentials.json';
-
-const creditials = {web: {}};
+import creditials from './.credentials.json';
 
 export const init = async () => {
   return new Promise(resolve => {
     window.gapi.load('client:auth2', async () => {
       await window.gapi.client.init({
-        apiKey: creditials.web.api_key,
-        clientId: creditials.web.client_id,
+        apiKey: creditials.api_key,
+        clientId: creditials.client_id,
         discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
         scope: 'https://www.googleapis.com/auth/spreadsheets',
       });
