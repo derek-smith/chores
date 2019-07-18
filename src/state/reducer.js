@@ -21,6 +21,7 @@ const reducer = (state = DEFAULT_STATE, action) => {
           .map(([name, price]) => ({
             name,
             price: parseFloat(price) * 100,
+            count: 0,
           })),
       };
     default:
