@@ -17,8 +17,12 @@ import IconButton from '@material-ui/core/IconButton';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 
 const useStyles = makeStyles(() => ({
-  header: {
-
+  centered: {
+    width: '100vw',
+    height: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   footer: {
     top: 'auto',
@@ -46,7 +50,7 @@ const App = ({choreList, getChoreList, isSignedIn, name, signIn}) => {
 
   return (
     <>
-     <AppBar position="fixed" color="default" className={classes.header}>
+     <AppBar position="fixed" color="default">
         <Toolbar>
           <Typography variant="h6" color="inherit">
             Chores
@@ -66,9 +70,9 @@ const App = ({choreList, getChoreList, isSignedIn, name, signIn}) => {
                     </Typography>
                   </ListItemText>
                   <ListItemText>
-                    <Typography variant="h6" color="inherit">
+                    {/* <Typography variant="h6" color="inherit"> */}
                       {chore.name}
-                    </Typography>
+                    {/* </Typography> */}
                   </ListItemText>
                   <ListItemIcon>
                     <IconButton edge="end">
@@ -80,11 +84,15 @@ const App = ({choreList, getChoreList, isSignedIn, name, signIn}) => {
             </List>  
           )
       ) : (
-        <button onClick={signIn}>Sign in to Google</button>
+        <div className={classes.centered}>
+          <Button variant="contained" onClick={signIn}>Sign in to Google</Button>
+        </div>
       ))}
       <AppBar position="fixed" color="default" classes={{root: classes.footer}}>
-        <Toolbar classes={{root: classes.flip}}>
-          <Button variant="contained" color="primary">Track it</Button>
+        <Toolbar>
+          {isSignedIn && (
+            <Button variant="contained" color="primary" disabled={true /* TODO: how many chores are selected? */}>Add chores</Button>
+          )}
         </Toolbar>
       </AppBar>
     </>

@@ -30,7 +30,6 @@ export const signIn = () => async dispatch => {
 export const getChoreList = () => async dispatch => {
   dispatch({type: 'GET_CHORE_LIST_PENDING'});
   sheets.getChoreList().then(choreList => {
-    console.log('getChoreList() choreList:', choreList);
     dispatch({type: 'GET_CHORE_LIST_SUCCESS', payload: {choreList}});
   }).catch(() => {
     dispatch({type: 'GET_CHORE_LIST_ERROR'});
