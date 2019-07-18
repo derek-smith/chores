@@ -31,7 +31,7 @@ export const init = async () => {
   });
 };
 
-export const googleSignIn = async () => {
+export const signIn = async () => {
   const auth = window.gapi.auth2.getAuthInstance();
 
   if (!auth) {
@@ -52,9 +52,18 @@ export const googleSignIn = async () => {
   const name = window.gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getGivenName();
 
   return {isSignedIn, name};
-}
+};
+
+export const getChoreList = async () => {
+  const response = await window.gapi.client.sheets.spreadsheets.values.get({
+    spreadsheetId: '1jCoMWe-Xjsr3tf7V1Bf8iFb2k1v_2v1veFRztEyZNCA',
+    range: 'Chore List!A:B',
+  });
+  return response.result.values;
+};
 
 export default {
+  getChoreList,
   init,
-  googleSignIn,
+  signIn,
 }
