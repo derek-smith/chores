@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {connect} from 'react-redux';
 
-import {getChoreList, signIn} from '../state/actions';
+import {decrementChore, getChoreList, incrementChore, signIn} from '../state/actions';
 
 import {makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -12,7 +12,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import AddBoxIcon from '@material-ui/icons/AddBox';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import PersonIcon from '@material-ui/icons/Person';
 
 const useStyles = makeStyles(() => ({
@@ -28,23 +28,18 @@ const useStyles = makeStyles(() => ({
     padding: '4px 0 0 0',
   },
   chore: {
-    justifyContent: 'space-between',
     alignItems: 'flex-start',
   },
   choreName: {
-    maxWidth: '50%',
   },
   count: {
     flex: 'unset',
+    maxWidth: 100,
   },
-  header: {
+  spaceBetween: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  invisible: {
-    // visibility: 'hidden',
-    minWidth: 'unset',
   },
   footer: {
     top: 'auto',
@@ -56,21 +51,37 @@ const useStyles = makeStyles(() => ({
   userNameButton: {
     paddingLeft: 12,
   },
+  removeIcon: {
+    justifyContent: 'center',
+    minWidth: 0,
+    paddingRight: 8,
+    marginTop: 2,
+    color: 'red',
+  },
+  itemLeft: {
+    display: 'flex',
+  },
 }));
 
-const App = ({choreList, getChoreList, isSignedIn, name, signIn}) => {
+const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedIn, name, signIn, total}) => {
+  const classes = useStyles();
+  
   useEffect(() => {
     if (isSignedIn) {
       getChoreList();
     }
   }, [isSignedIn]); // eslint-disable-line
 
-  const classes = useStyles();
+  const onIncrementChore = choreId => () => incrementChore(choreId);
+  const onDecrementChore = choreId => event => {
+    event.stopPropagation();
+    decrementChore(choreId);
+  };
 
   return (
     <>
      <AppBar position="fixed" color="default">
-        <Toolbar classes={{root: classes.header}}>
+        <Toolbar classes={{root: classes.spaceBetween}}>
           <Typography variant="h6" color="inherit">
             Chores
           </Typography>
@@ -88,14 +99,10 @@ const App = ({choreList, getChoreList, isSignedIn, name, signIn}) => {
           : (
             <List dense={true} classes={{root: classes.list}}>
               {choreList.map(chore => (
-                <ListItem key={chore.name} classes={{root: classes.chore}} onClick={() => console.log('ListItem onClick()')} button={true} divider={true}>
-                  <ListItemText classes={{root: classes.choreName}}>
-                    {chore.name}
-                  </ListItemText>
-                  <ListItemText classes={{root: classes.count}}>{chore.count} @ ${(chore.price / 100)}</ListItemText>
-                  {/* <ListItemIcon classes={{root: classes.invisible}}>
-                    <IconButton edge="end"><AddBoxIcon /></IconButton>
-                  </ListItemIcon> */}
+                <ListItem key={chore.name} classes={{root: classes.chore}} onClick={onIncrementChore(chore.id)} button={true} divider={true}>
+                  {chore.count > 0 && <ListItemIcon classes={{root: classes.removeIcon}} onClick={onDecrementChore(chore.id)}><RemoveCircleIcon /></ListItemIcon>}
+                  <ListItemText classes={{root: classes.choreName}}>{chore.name}</ListItemText>
+                  <ListItemText classes={{root: classes.count}}>{chore.count} @ ${chore.price / 100}</ListItemText>
                 </ListItem>                      
               ))}
             </List>  
@@ -106,9 +113,16 @@ const App = ({choreList, getChoreList, isSignedIn, name, signIn}) => {
         </div>
       ))}
       <AppBar position="fixed" color="default" classes={{root: classes.footer}}>
-        <Toolbar>
+        <Toolbar classes={{root: classes.spaceBetween}}>
           {isSignedIn && (
-            <Button variant="contained" color="primary" disabled={true /* TODO: how many chores are selected? */}>Save</Button>
+            <>
+              <Button variant="contained" color="primary" disabled={total <= 0}>Save</Button>
+              {total > 0 && (
+                <Typography variant="h6" color="primary">
+                  <span>+</span> ${(total / 100)}
+                </Typography>
+              )}
+            </>
           )}
         </Toolbar>
       </AppBar>
@@ -116,12 +130,13 @@ const App = ({choreList, getChoreList, isSignedIn, name, signIn}) => {
   );
 }
 
-const mapStateToProps = ({choreList, isSignedIn, name}) => ({
-  choreList,
+const mapStateToProps = ({choreList, isSignedIn, name, total}) => ({
+  choreList: Object.values(choreList),
   isSignedIn,
   name,
+  total,
 });
 
-const mapDispatchToProps = {getChoreList, signIn};
+const mapDispatchToProps = {decrementChore, getChoreList, incrementChore, signIn};
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

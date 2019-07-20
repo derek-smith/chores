@@ -1,5 +1,13 @@
 import sheets from '../api/sheets';
 
+export const incrementChore = choreId => dispatch => {
+  dispatch({type: 'INCREMENT_CHORE', payload: {choreId}})
+}
+
+export const decrementChore = choreId => dispatch => {
+  dispatch({type: 'DECREMENT_CHORE', payload: {choreId}})
+}
+
 // Note: `data` in `initSheetsApi()` and `signIn()` must match!!
 
 export const initSheetsApi = () => dispatch => {
