@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {connect} from 'react-redux';
 
-import {decrementChore, getChoreList, incrementChore, signIn} from '../state/actions';
+import {closeSaveDialog, decrementChore, getChoreList, incrementChore, saveCompletedChores, signIn} from '../state/actions';
 
 import {makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-// import DialogActions from '@material-ui/core/DialogActions';
+import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -68,11 +68,9 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedIn, name, signIn}) => {
+const App = ({choreList, closeSaveDialog, decrementChore, getChoreList, incrementChore, isSaveDialogOpen, isSignedIn, name, saveCompletedChores, saveStatus, signIn}) => {
   const classes = useStyles();
   
-  const [isDialogOpen, setDialogOpen] = useState(false);
-
   useEffect(() => {
     if (isSignedIn) {
       getChoreList();
@@ -86,6 +84,22 @@ const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedI
   };
 
   const total = Object.values(choreList).reduce((total, chore) => total + (chore.count * chore.price), 0);
+
+  const onSaveClick = () => {
+    const timestamp = new Date().toISOString();
+    const rows = Object.values(choreList)
+      .filter(chore => chore.count > 0)
+      .reduce((rows, chore) => [
+        ...rows,
+        ...[...Array(chore.count)].map(() => [
+          timestamp,
+          name,
+          chore.name,
+          chore.price / 100,        
+        ])
+      ], []);
+    saveCompletedChores(rows);
+  }
 
   return (
     <>
@@ -125,7 +139,7 @@ const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedI
         <Toolbar classes={{root: classes.spaceBetween}}>
           {isSignedIn && (
             <>
-              <Button variant="contained" color="primary" disabled={total <= 0} onClick={() => setDialogOpen(true)}>Save</Button>
+              <Button variant="contained" color="primary" disabled={total <= 0} onClick={onSaveClick}>Save</Button>
               {total > 0 && (
                 <Typography variant="h6" color="primary">
                   <span>+</span> ${(total / 100)}
@@ -135,22 +149,48 @@ const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedI
           )}
         </Toolbar>
       </AppBar>
-      <Dialog open={isDialogOpen} onClose={() => setDialogOpen(false)}>
-        <DialogTitle>In progress</DialogTitle>
-        <DialogContent>
-          <DialogContentText>We're saving your chores now...</DialogContentText>
-        </DialogContent>
+      <Dialog open={isSaveDialogOpen} onClose={closeSaveDialog}>
+        {saveStatus === 'PENDING' ? (
+          <>
+            <DialogTitle>In progress</DialogTitle>
+            <DialogContent>
+              <DialogContentText>We're saving your chores now...</DialogContentText>
+            </DialogContent>
+          </>
+        ) : saveStatus === 'SUCCESS' ? (
+          <>
+            <DialogTitle>Done</DialogTitle>
+            <DialogContent>
+              <DialogContentText>Nice work!! Your chores have been saved.</DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeSaveDialog}>Ok</Button>
+            </DialogActions>
+          </>
+        ) : (
+          <>
+            <DialogTitle>Error</DialogTitle>
+            <DialogContent>
+              <DialogContentText>We weren't able to save your chores right now. Try again later.</DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeSaveDialog}>Ok</Button>
+            </DialogActions>
+          </>
+        )}
       </Dialog>
     </>
   );
 }
 
-const mapStateToProps = ({choreList, isSignedIn, name}) => ({
+const mapStateToProps = ({choreList, isSaveDialogOpen, isSignedIn, name, saveStatus}) => ({
   choreList: Object.values(choreList),
+  isSaveDialogOpen,
   isSignedIn,
   name,
+  saveStatus,
 });
 
-const mapDispatchToProps = {decrementChore, getChoreList, incrementChore, signIn};
+const mapDispatchToProps = {closeSaveDialog, decrementChore, getChoreList, incrementChore, saveCompletedChores, signIn};
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

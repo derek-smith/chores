@@ -1,7 +1,8 @@
 const DEFAULT_STATE = {
+  choreList: [],
+  isSaveDialogOpen: false,
   isSignedIn: false,
   name: '',
-  choreList: [],
   saveStatus: 'PENDING',
 };
 
@@ -53,6 +54,24 @@ const reducer = (state = DEFAULT_STATE, action) => {
         },
       };
     }
+    case 'SAVE_COMPLETED_CHORES_PENDING':
+      return {...state, isSaveDialogOpen: true, saveStatus: 'PENDING'};
+    case 'SAVE_COMPLETED_CHORES_SUCCESS':
+      return {...state, saveStatus: 'SUCCESS'};
+    case 'SAVE_COMPLETED_CHORES_ERROR':
+      return {...state, saveStatus: 'ERROR'};
+    case 'CLOSE_SAVE_DIALOG':
+      return {
+        ...state,
+        isSaveDialogOpen: false,
+        // Reset the counts
+        choreList: {
+          ...Object.keys(state.choreList).map(choreId => ({
+            ...state.choreList[choreId],
+            count: 0,
+          })),
+        },
+      };
     default:
       return state;
   }

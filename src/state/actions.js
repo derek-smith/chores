@@ -43,3 +43,16 @@ export const getChoreList = () => async dispatch => {
     dispatch({type: 'GET_CHORE_LIST_ERROR'});
   });
 };
+
+export const saveCompletedChores = rows => async dispatch => {
+  dispatch({type: 'SAVE_COMPLETED_CHORES_PENDING'});
+  sheets.saveCompletedChores(rows).then(() => {
+    dispatch({type: 'SAVE_COMPLETED_CHORES_SUCCESS'});
+  }).catch(() => {
+    dispatch({type: 'SAVE_COMPLETED_CHORES_ERROR'});
+  });
+}
+
+export const closeSaveDialog = () => ({
+  type: 'CLOSE_SAVE_DIALOG',
+});
