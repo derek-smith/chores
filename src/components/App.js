@@ -1,19 +1,24 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 
 import {decrementChore, getChoreList, incrementChore, signIn} from '../state/actions';
 
 import {makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+// import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import PersonIcon from '@material-ui/icons/Person';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(() => ({
   centered: {
@@ -63,9 +68,11 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedIn, name, signIn, total}) => {
+const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedIn, name, signIn}) => {
   const classes = useStyles();
   
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
   useEffect(() => {
     if (isSignedIn) {
       getChoreList();
@@ -77,6 +84,8 @@ const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedI
     event.stopPropagation();
     decrementChore(choreId);
   };
+
+  const total = Object.values(choreList).reduce((total, chore) => total + (chore.count * chore.price), 0);
 
   return (
     <>
@@ -95,7 +104,7 @@ const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedI
       </AppBar>
       {(isSignedIn ? (
         !choreList.length
-          ? `Hi ${name}`
+          ? `Hi ${name}, we couldn't find the chore list.`
           : (
             <List dense={true} classes={{root: classes.list}}>
               {choreList.map(chore => (
@@ -116,7 +125,7 @@ const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedI
         <Toolbar classes={{root: classes.spaceBetween}}>
           {isSignedIn && (
             <>
-              <Button variant="contained" color="primary" disabled={total <= 0}>Save</Button>
+              <Button variant="contained" color="primary" disabled={total <= 0} onClick={() => setDialogOpen(true)}>Save</Button>
               {total > 0 && (
                 <Typography variant="h6" color="primary">
                   <span>+</span> ${(total / 100)}
@@ -126,15 +135,20 @@ const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedI
           )}
         </Toolbar>
       </AppBar>
+      <Dialog open={isDialogOpen} onClose={() => setDialogOpen(false)}>
+        <DialogTitle>In progress</DialogTitle>
+        <DialogContent>
+          <DialogContentText>We're saving your chores now...</DialogContentText>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
 
-const mapStateToProps = ({choreList, isSignedIn, name, total}) => ({
+const mapStateToProps = ({choreList, isSignedIn, name}) => ({
   choreList: Object.values(choreList),
   isSignedIn,
   name,
-  total,
 });
 
 const mapDispatchToProps = {decrementChore, getChoreList, incrementChore, signIn};

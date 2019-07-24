@@ -2,10 +2,8 @@ const DEFAULT_STATE = {
   isSignedIn: false,
   name: '',
   choreList: [],
-  total: 0,
+  saveStatus: 'PENDING',
 };
-
-const calculateTotal = choreList => Object.values(choreList).reduce((total, chore) => total + (chore.count * chore.price), 0);
 
 const reducer = (state = DEFAULT_STATE, action) => {
   switch(action.type) {
@@ -32,7 +30,7 @@ const reducer = (state = DEFAULT_STATE, action) => {
           }), {})
       };
     case 'INCREMENT_CHORE': {
-      const s = {
+      return {
         ...state,
         choreList: {
           ...state.choreList,
@@ -42,13 +40,9 @@ const reducer = (state = DEFAULT_STATE, action) => {
           },
         },
       };
-      return {
-        ...s,
-        total: calculateTotal(s.choreList),
-      };
     }
     case 'DECREMENT_CHORE': {
-      const s = {
+      return {
         ...state,
         choreList: {
           ...state.choreList,
@@ -57,10 +51,6 @@ const reducer = (state = DEFAULT_STATE, action) => {
             count: state.choreList[action.payload.choreId].count - 1,
           },
         },
-      };
-      return {
-        ...s,
-        total: calculateTotal(s.choreList),
       };
     }
     default:
