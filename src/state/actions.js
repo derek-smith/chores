@@ -53,6 +53,23 @@ export const saveCompletedChores = rows => async dispatch => {
   });
 }
 
-export const closeSaveDialog = () => ({
-  type: 'CLOSE_SAVE_DIALOG',
+export const openSaveChoresDialog = () => ({
+  type: 'OPEN_SAVE_CHORES_DIALOG',
+});
+
+export const closeSaveChoresDialog = () => ({
+  type: 'CLOSE_SAVE_CHORES_DIALOG',
+});
+
+export const openChangePersonDialog = () => ({
+  type: 'OPEN_CHANGE_PERSON_DIALOG',
+});
+
+export const closeChangePersonDialog = () => ({
+  type: 'CLOSE_CHANGE_PERSON_DIALOG',
+});
+
+export const changePerson = person => ({
+  type: 'CHANGE_PERSON',
+  payload: {person},
 });

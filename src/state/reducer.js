@@ -1,8 +1,10 @@
 const DEFAULT_STATE = {
   choreList: [],
-  isSaveDialogOpen: false,
+  isChangePersonDialogOpen: false,
+  isSaveChoresDialogOpen: false,
   isSignedIn: false,
   name: '',
+  people: ['Derek', 'Krista'],
   saveStatus: 'PENDING',
 };
 
@@ -55,15 +57,15 @@ const reducer = (state = DEFAULT_STATE, action) => {
       };
     }
     case 'SAVE_COMPLETED_CHORES_PENDING':
-      return {...state, isSaveDialogOpen: true, saveStatus: 'PENDING'};
+      return {...state, isSaveChoresDialogOpen: true, saveStatus: 'PENDING'};
     case 'SAVE_COMPLETED_CHORES_SUCCESS':
       return {...state, saveStatus: 'SUCCESS'};
     case 'SAVE_COMPLETED_CHORES_ERROR':
       return {...state, saveStatus: 'ERROR'};
-    case 'CLOSE_SAVE_DIALOG':
+    case 'CLOSE_SAVE_CHORES_DIALOG':
       return {
         ...state,
-        isSaveDialogOpen: false,
+        isSaveChoresDialogOpen: false,
         // Reset the counts
         choreList: {
           ...Object.keys(state.choreList).map(choreId => ({
@@ -72,6 +74,12 @@ const reducer = (state = DEFAULT_STATE, action) => {
           })),
         },
       };
+    case 'OPEN_CHANGE_PERSON_DIALOG':
+      return {...state, isChangePersonDialogOpen: true};
+    case 'CLOSE_CHANGE_PERSON_DIALOG':
+      return {...state, isChangePersonDialogOpen: false};
+    case 'CHANGE_PERSON':
+      return {...state, isChangePersonDialogOpen: false, name: action.payload.person};
     default:
       return state;
   }

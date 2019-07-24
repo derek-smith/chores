@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {connect} from 'react-redux';
 
-import {decrementChore, getChoreList, incrementChore, saveCompletedChores, signIn} from '../state/actions';
+import {decrementChore, getChoreList, incrementChore, openChangePersonDialog, saveCompletedChores, signIn} from '../state/actions';
 
 import {makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -15,6 +15,7 @@ import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
+import ChangePersonDialog from './ChangePersonDialog';
 import SaveChoresDialog from './SaveChoresDialog';
 
 const useStyles = makeStyles(() => ({
@@ -65,7 +66,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedIn, name, saveCompletedChores, signIn}) => {
+const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedIn, name, openChangePersonDialog, saveCompletedChores, signIn}) => {
   const classes = useStyles();
   
   useEffect(() => {
@@ -106,13 +107,14 @@ const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedI
             Chores
           </Typography>
           {name && (
-            <Button variant="contained" color="primary" classes={{root: classes.userNameButton}}>
+            <Button variant="contained" color="primary" classes={{root: classes.userNameButton}} onClick={openChangePersonDialog}>
               <PersonIcon />
               <span className={classes.userName}>{name}</span>
             </Button>
           )}
         </Toolbar>
       </AppBar>
+
       {(isSignedIn ? (
         !choreList.length
           ? `Hi ${name}, we couldn't find the chore list.`
@@ -132,6 +134,7 @@ const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedI
           <Button variant="contained" onClick={signIn}>Sign in to Google</Button>
         </div>
       ))}
+
       <AppBar position="fixed" color="default" classes={{root: classes.footer}}>
         <Toolbar classes={{root: classes.spaceBetween}}>
           {isSignedIn && (
@@ -146,7 +149,9 @@ const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedI
           )}
         </Toolbar>
       </AppBar>
+
       <SaveChoresDialog />
+      <ChangePersonDialog />
     </>
   );
 }
@@ -157,6 +162,6 @@ const mapStateToProps = ({choreList, isSignedIn, name}) => ({
   name,
 });
 
-const mapDispatchToProps = {decrementChore, getChoreList, incrementChore, saveCompletedChores, signIn};
+const mapDispatchToProps = {decrementChore, getChoreList, incrementChore, openChangePersonDialog, saveCompletedChores, signIn};
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

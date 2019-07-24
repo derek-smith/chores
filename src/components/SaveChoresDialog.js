@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import {closeSaveDialog} from '../state/actions';
+import {closeSaveChoresDialog} from '../state/actions';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -10,8 +10,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-const SaveChoresDialog = ({closeSaveDialog, isSaveDialogOpen, saveStatus}) => (
-  <Dialog open={isSaveDialogOpen} onClose={closeSaveDialog}>
+const SaveChoresDialog = ({closeSaveChoresDialog, isSaveChoresDialogOpen, saveStatus}) => (
+  <Dialog open={isSaveChoresDialogOpen} onClose={closeSaveChoresDialog}>
     {saveStatus === 'PENDING' ? (
       <>
         <DialogTitle>In progress</DialogTitle>
@@ -26,7 +26,7 @@ const SaveChoresDialog = ({closeSaveDialog, isSaveDialogOpen, saveStatus}) => (
           <DialogContentText>Nice work!! Your chores have been saved.</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeSaveDialog}>Ok</Button>
+          <Button onClick={closeSaveChoresDialog}>Ok</Button>
         </DialogActions>
       </>
     ) : (
@@ -36,18 +36,18 @@ const SaveChoresDialog = ({closeSaveDialog, isSaveDialogOpen, saveStatus}) => (
           <DialogContentText>We weren't able to save your chores right now. Try again later.</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeSaveDialog}>Ok</Button>
+          <Button onClick={closeSaveChoresDialog}>Ok</Button>
         </DialogActions>
       </>
     )}
   </Dialog>
 );
 
-const mapStateToProps = ({isSaveDialogOpen, saveStatus}) => ({
-  isSaveDialogOpen,
+const mapStateToProps = ({isSaveChoresDialogOpen, saveStatus}) => ({
+  isSaveChoresDialogOpen,
   saveStatus,
 });
 
-const mapDispatchToProps = {closeSaveDialog};
+const mapDispatchToProps = {closeSaveChoresDialog};
 
 export default connect(mapStateToProps, mapDispatchToProps)(SaveChoresDialog);
