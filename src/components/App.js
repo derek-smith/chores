@@ -1,8 +1,6 @@
 import React, {useEffect} from 'react';
 import {connect} from 'react-redux';
 
-import {decrementChore, getChoreList, incrementChore, openChangePersonDialog, saveCompletedChores, signIn} from '../state/actions';
-
 import {makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
@@ -10,13 +8,15 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import PersonIcon from '@material-ui/icons/Person';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
+import HeaderBar from './HeaderBar';
 import ChangePersonDialog from './ChangePersonDialog';
 import SaveChoresDialog from './SaveChoresDialog';
+
+import {decrementChore, getChoreList, incrementChore, openChangePersonDialog, saveCompletedChores, signIn} from '../state/actions';
 
 const useStyles = makeStyles(() => ({
   centered: {
@@ -47,12 +47,6 @@ const useStyles = makeStyles(() => ({
   footer: {
     top: 'auto',
     bottom: 0,
-  },
-  userName: {
-    marginLeft: 8,
-  },
-  userNameButton: {
-    paddingLeft: 12,
   },
   removeIcon: {
     justifyContent: 'center',
@@ -101,19 +95,7 @@ const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedI
 
   return (
     <>
-     <AppBar position="fixed" color="default">
-        <Toolbar classes={{root: classes.spaceBetween}}>
-          <Typography variant="h6" color="inherit">
-            Chores
-          </Typography>
-          {name && (
-            <Button variant="contained" color="primary" classes={{root: classes.userNameButton}} onClick={openChangePersonDialog}>
-              <PersonIcon />
-              <span className={classes.userName}>{name}</span>
-            </Button>
-          )}
-        </Toolbar>
-      </AppBar>
+      <HeaderBar />
 
       {(isSignedIn ? (
         !choreList.length
