@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import {makeStyles} from '@material-ui/core/styles';
@@ -24,14 +25,14 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const HeaderBar = ({name, openChangePersonDialog}) => {
+const HeaderBar = ({isChangePersonButtonHidden, name, openChangePersonDialog}) => {
   const classes = useStyles();
 
   return (
     <AppBar position="fixed" color="default">
       <Toolbar classes={{root: classes.spaceBetween}}>
         <Typography variant="h6" color="inherit">Chores</Typography>
-        {name && (
+        {name && !isChangePersonButtonHidden && (
           <Button variant="contained" color="primary" classes={{root: classes.userNameButton}} onClick={openChangePersonDialog}>
             <PersonIcon />
             <span className={classes.userName}>{name}</span>
@@ -40,6 +41,12 @@ const HeaderBar = ({name, openChangePersonDialog}) => {
       </Toolbar>
     </AppBar>
   );
+};
+
+HeaderBar.propTypes = {
+  isChangePersonButtonHidden: PropTypes.bool,
+  name: PropTypes.string,
+  openChangePersonDialog: PropTypes.func,
 };
 
 const mapStateToProps = ({name}) => ({name});

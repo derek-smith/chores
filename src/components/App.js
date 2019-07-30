@@ -8,10 +8,15 @@ import PayoutsPage from './PayoutsPage';
 
 const App = () => (
   <Router>
-    <HeaderBar />
     <Switch>
-      <Route path="/payouts" component={PayoutsPage} />
-      <Route path="/chores" component={ChoresPage} />
+      <Route path="/payouts">
+        <HeaderBar isChangePersonButtonHidden={true} />
+        <PayoutsPage />
+      </Route>
+      <Route path="/chores">
+        <HeaderBar />
+        <ChoresPage />
+      </Route>
       <Redirect to="/payouts" />
     </Switch>
   </Router>

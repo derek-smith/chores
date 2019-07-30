@@ -71,6 +71,14 @@ export const getChoreList = async () => {
   return response.result.values;
 };
 
+export const getCompletedChores = async () => {
+  let response = await window.gapi.client.sheets.spreadsheets.values.get({
+    spreadsheetId: '1jCoMWe-Xjsr3tf7V1Bf8iFb2k1v_2v1veFRztEyZNCA',
+    range: 'Completed Chores!A:D',
+  });
+  return response.result.values;
+}
+
 export const saveCompletedChores = async rows => {
   let response = await window.gapi.client.sheets.spreadsheets.values.get({
     spreadsheetId: '1jCoMWe-Xjsr3tf7V1Bf8iFb2k1v_2v1veFRztEyZNCA',
@@ -91,6 +99,7 @@ export const saveCompletedChores = async rows => {
 
 export default {
   getChoreList,
+  getCompletedChores,
   init,
   saveCompletedChores,
   signIn,

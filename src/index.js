@@ -4,7 +4,7 @@ import {Provider} from 'react-redux'
 
 import App from './components/App';
 import store from './state/store';
-import {initSheetsApi} from './state/actions';
+import {getChoreList, getCompletedChores, initSheetsApi} from './state/actions';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
@@ -13,6 +13,18 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root')
 );
+
+let current;
+store.subscribe(() => {
+  const {isSignedIn} = store.getState();
+  const prev = current;
+  current = isSignedIn;
+
+  if (current !== prev && current) {
+    store.dispatch(getChoreList());
+    store.dispatch(getCompletedChores());
+  }
+})
 
 store.dispatch(initSheetsApi());
 

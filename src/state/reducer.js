@@ -1,10 +1,11 @@
 const DEFAULT_STATE = {
   choreList: [],
+  completedChores: [],
   isChangePersonDialogOpen: false,
   isSaveChoresDialogOpen: false,
   isSignedIn: false,
   name: '',
-  people: ['Derek', 'Krista'],
+  people: [],
   saveStatus: 'PENDING',
 };
 
@@ -80,6 +81,18 @@ const reducer = (state = DEFAULT_STATE, action) => {
       return {...state, isChangePersonDialogOpen: false};
     case 'CHANGE_PERSON':
       return {...state, isChangePersonDialogOpen: false, name: action.payload.person};
+    case 'GET_COMPLETED_CHORES_SUCCESS':
+      return {
+        ...state,
+        completedChores: action.payload.completedChores,
+        people: Array.from(
+          new Set(
+            action.payload.completedChores
+              .filter((_, index) => index > 0)
+              .map(chore => chore[1])
+          )
+        ).sort(),
+      }
     default:
       return state;
   }

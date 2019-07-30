@@ -19,6 +19,14 @@ import SaveChoresDialog from './SaveChoresDialog';
 import {decrementChore, getChoreList, incrementChore, saveCompletedChores, signIn} from '../state/actions';
 
 const useStyles = makeStyles(() => ({
+  '@media (min-width: 600px)': {
+    container: {
+      margin: `56px 0`,
+    },
+  },
+  container: {
+    margin: `64px 0`,
+  },
   centered: {
     width: '100vw',
     height: '100vh',
@@ -27,7 +35,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
   },
   list: {
-    margin: '56px 0',
+    // margin: '56px 0',
     padding: '4px 0 0 0',
   },
   chore: {
@@ -94,13 +102,18 @@ const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedI
   }
 
   return (
-    <>
+    <div className={classes.container}>
       <HeaderBar />
 
       {(isSignedIn ? (
         !choreList.length
-          ? `Hi ${name}, we couldn't find the chore list.`
-          : (
+          ? (
+            <div className={classes.centered}>
+              <Typography variant="body1">
+                We don't have the chore list yet.
+              </Typography>
+            </div>
+          ) : (
             <List dense={true} classes={{root: classes.list}}>
               {choreList.map(chore => (
                 <ListItem key={chore.name} classes={{root: classes.chore}} onClick={onIncrementChore(chore.id)} button={true} divider={true}>
@@ -134,7 +147,7 @@ const App = ({choreList, decrementChore, getChoreList, incrementChore, isSignedI
 
       <SaveChoresDialog />
       <ChangePersonDialog />
-    </>
+    </div>
   );
 }
 

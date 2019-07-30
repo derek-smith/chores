@@ -38,15 +38,27 @@ export const signIn = () => async dispatch => {
 export const getChoreList = () => async dispatch => {
   dispatch({type: 'GET_CHORE_LIST_PENDING'});
   sheets.getChoreList().then(choreList => {
+    console.log('getChoreList()', choreList);
     dispatch({type: 'GET_CHORE_LIST_SUCCESS', payload: {choreList}});
   }).catch(() => {
     dispatch({type: 'GET_CHORE_LIST_ERROR'});
   });
 };
 
+export const getCompletedChores = rows => async dispatch => {
+  dispatch({type: 'GET_COMPLETED_CHORES_PENDING'});
+  sheets.getCompletedChores().then(completedChores => {
+    console.log('getCompletedChores()', completedChores);
+    dispatch({type: 'GET_COMPLETED_CHORES_SUCCESS', payload: {completedChores}});
+  }).catch(() => {
+    dispatch({type: 'GET_COMPLETED_CHORES_ERROR'});
+  });
+}
+
 export const saveCompletedChores = rows => async dispatch => {
   dispatch({type: 'SAVE_COMPLETED_CHORES_PENDING'});
   sheets.saveCompletedChores(rows).then(() => {
+    console.log('saveCompletedChores() success');
     dispatch({type: 'SAVE_COMPLETED_CHORES_SUCCESS'});
   }).catch(() => {
     dispatch({type: 'SAVE_COMPLETED_CHORES_ERROR'});
