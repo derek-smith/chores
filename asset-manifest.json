@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.js": "/chores/static/js/main.f0586246.chunk.js",
-    "main.js.map": "/chores/static/js/main.f0586246.chunk.js.map",
+    "main.js": "/chores/static/js/main.74c6e38d.chunk.js",
+    "main.js.map": "/chores/static/js/main.74c6e38d.chunk.js.map",
     "runtime~main.js": "/chores/static/js/runtime~main.047c0c15.js",
     "runtime~main.js.map": "/chores/static/js/runtime~main.047c0c15.js.map",
     "static/js/2.5f9e7293.chunk.js": "/chores/static/js/2.5f9e7293.chunk.js",
     "static/js/2.5f9e7293.chunk.js.map": "/chores/static/js/2.5f9e7293.chunk.js.map",
     "index.html": "/chores/index.html",
-    "precache-manifest.abcff3f9d57da25311f362ac49228966.js": "/chores/precache-manifest.abcff3f9d57da25311f362ac49228966.js",
+    "precache-manifest.ae6e9486e1d2bc97aa1648898d2aa5e3.js": "/chores/precache-manifest.ae6e9486e1d2bc97aa1648898d2aa5e3.js",
     "service-worker.js": "/chores/service-worker.js"
   }
 }
