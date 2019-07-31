@@ -45,7 +45,7 @@ export const getChoreList = () => async dispatch => {
   });
 };
 
-export const getCompletedChores = rows => async dispatch => {
+export const getCompletedChores = () => async dispatch => {
   dispatch({type: 'GET_COMPLETED_CHORES_PENDING'});
   sheets.getCompletedChores().then(completedChores => {
     console.log('getCompletedChores()', completedChores);
@@ -69,9 +69,13 @@ export const openSaveChoresDialog = () => ({
   type: 'OPEN_SAVE_CHORES_DIALOG',
 });
 
-export const closeSaveChoresDialog = () => ({
-  type: 'CLOSE_SAVE_CHORES_DIALOG',
-});
+export const closeSaveChoresDialog = isSaveSuccessful => dispatch => {
+  dispatch({type: 'CLOSE_SAVE_CHORES_DIALOG'});
+  if (isSaveSuccessful) {
+    getCompletedChores()(dispatch);
+    window.location.hash = "/payouts";
+  }
+};
 
 export const openChangePersonDialog = () => ({
   type: 'OPEN_CHANGE_PERSON_DIALOG',

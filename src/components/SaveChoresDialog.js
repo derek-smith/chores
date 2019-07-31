@@ -26,7 +26,7 @@ const SaveChoresDialog = ({closeSaveChoresDialog, isSaveChoresDialogOpen, saveSt
           <DialogContentText>Nice work!! Your chores have been saved.</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeSaveChoresDialog}>Ok</Button>
+          <Button onClick={() => closeSaveChoresDialog(true)}>Ok</Button>
         </DialogActions>
       </>
     ) : (
@@ -36,7 +36,7 @@ const SaveChoresDialog = ({closeSaveChoresDialog, isSaveChoresDialogOpen, saveSt
           <DialogContentText>We weren't able to save your chores right now. Try again later.</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeSaveChoresDialog}>Ok</Button>
+          <Button onClick={() => closeSaveChoresDialog(false)}>Ok</Button>
         </DialogActions>
       </>
     )}

@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 
 import {Link} from 'react-router-dom';
 import {makeStyles} from '@material-ui/core/styles';
@@ -52,8 +54,29 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const PayoutsPage = () =>  {
+const PayoutsPage = ({completedChores, currentWeek}) =>  {
   const classes = useStyles();
+  
+  const startDate = currentWeek.start && currentWeek.start.toLocaleDateString("en-US", {month: 'short', weekday: 'short', day: 'numeric'});
+  const endDate = currentWeek.end && currentWeek.end.toLocaleDateString("en-US", {month: 'short', weekday: 'short', day: 'numeric'});
+
+  // Calculate the payouts
+  const currentWeekcompletedChores = completedChores.filter(chore => {
+    const date = new Date(chore[0]);
+    return date >= currentWeek.start && date <= currentWeek.end;
+  })
+  console.log('currentWeek completedChores:', currentWeekcompletedChores);
+
+  const payouts = Object.entries(
+    currentWeekcompletedChores
+      .reduce((payouts, chore) => {
+        payouts[chore[1]] = payouts[chore[1]] || 0
+        payouts[chore[1]] += parseInt(chore[3]);
+        return payouts;
+      }, {})
+    ).map(([name, sum]) => ({name, sum}))
+    .sort((a, b) => b.sum - a.sum);
+  console.log('payouts:', payouts);
 
   return (
     <>
@@ -61,32 +84,26 @@ const PayoutsPage = () =>  {
         <List>
           <ListItem alignItems="center">
             <ListItemText disableTypography>
-              <Typography variant="body1" align="center">
+              <Typography variant="subtitle1" align="center" gutterBottom>
                 Week of
               </Typography>
             </ListItemText>
           </ListItem>
           <ListItem divider classes={{root: classes.week}}>
-            <Typography variant="h3" classes={{root: classes.center}}>
-              Jul 27 - Jun 2
+            <Typography variant="h4" classes={{root: classes.center}}>
+              {startDate}{' - '}{endDate}
             </Typography>
           </ListItem>
-          <ListItem classes={{root: classes.split}}>
-            <Typography variant="body1">
-              Mom
-            </Typography>
-            <Typography variant="h6" color="primary">
-              $55
-            </Typography>
-          </ListItem>
-          <ListItem classes={{root: classes.split}}>
-            <Typography variant="body1">
-              Dad
-            </Typography>
-            <Typography variant="h6" color="primary">
-              $21
-            </Typography>
-          </ListItem>
+          {payouts.map(payout => (
+            <ListItem key={payout.name} classes={{root: classes.split}}>
+              <Typography variant="body1">
+                {payout.name}
+              </Typography>
+              <Typography variant="h6" color="primary">
+                ${payout.sum}
+              </Typography>
+            </ListItem>
+          ))}
         </List>
       </div>
       <Link to="chores" className={classes.add}>
@@ -98,4 +115,14 @@ const PayoutsPage = () =>  {
   );
 };
 
-export default PayoutsPage;
+PayoutsPage.propTypes = {
+  completedChores: PropTypes.array,
+  currentWeek: PropTypes.shape({
+    start: PropTypes.instanceOf(Date),
+    end: PropTypes.instanceOf(Date),
+  }),
+};
+
+const mapStateToProps = ({completedChores, currentWeek}) => ({completedChores, currentWeek});
+
+export default connect(mapStateToProps)(PayoutsPage);

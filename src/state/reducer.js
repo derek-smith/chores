@@ -1,6 +1,9 @@
+import {getCurrentWeek} from '../util/dateTime';
+
 const DEFAULT_STATE = {
   choreList: [],
   completedChores: [],
+  currentWeek: getCurrentWeek(),
   isChangePersonDialogOpen: false,
   isSaveChoresDialogOpen: false,
   isSignedIn: false,
@@ -84,7 +87,7 @@ const reducer = (state = DEFAULT_STATE, action) => {
     case 'GET_COMPLETED_CHORES_SUCCESS':
       return {
         ...state,
-        completedChores: action.payload.completedChores,
+        completedChores: action.payload.completedChores.filter((_, index) => index > 0),
         people: Array.from(
           new Set(
             action.payload.completedChores
