@@ -90,7 +90,7 @@ const PayoutsPage = ({completedChores, currentWeek}) =>  {
             </ListItemText>
           </ListItem>
           <ListItem divider classes={{root: classes.week}}>
-            <Typography variant="h4" classes={{root: classes.center}}>
+            <Typography variant="h6" classes={{root: classes.center}}>
               {startDate}{' - '}{endDate}
             </Typography>
           </ListItem>
